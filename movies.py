@@ -1,21 +1,24 @@
 import csv
 import pandas
 
+#import the csv as a dataframe
 movie_csv = pandas.read_csv('MovieBoardsDigital.csv')
 
-def test():
+
+# Look up a movie in the data frame
+def movie_lookup():
     while True:
         movie_check = input("Enter a movie to see if Jared has seen it. Press 'Q' to Quit\n")
-        if movie_check == 'Q':
+        if movie_check.lower() == 'q':
             break
-        elif movie_check in movie_csv['Title'].values:
-            print(f"Jared has seen {movie_check}\n?")       
+        elif movie_check.casefold() in movie_csv['Title'].values:
+            print(f"Jared has seen {movie_check}\n")       
         else:
-            print(f"Jared hasn't seen {movie_check}.")    
+            print(f"Jared hasn't seen {movie_check}.\n")    
     
-test()
+movie_lookup()
 
-print('Thank you for checking in! Have a nice day')
+print('\nThank you for checking in! Have a nice day')
 
 
 
