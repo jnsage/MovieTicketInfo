@@ -3,55 +3,77 @@ import pandas
 
 #import the csv as a dataframe
 movie_csv = pandas.read_csv('MovieBoardsDigital.csv')
+movie_csv['Date'] = pandas.to_datetime(movie_csv['Date'])
+sorted_by_date = movie_csv.sort_values('Date')
 
-# initialize empty list and nested dictionary
-# year_list = []
-# nested = {'Y': None, 'N': None}
-        
-# group number of times I did or didn't see a movie with April by Year
-# year_count = movie_csv.groupby(['Year', 'Saw with April'])[['Title']].count()
-# print(year_count)
-    
-#add # of years to an empty list
-# for year in movie_csv['Year'].unique():
-    # year_list.append(year)
 
-# add unique years as dictionary key with nested dict as keys
-# year_dict = dict.fromkeys(year_list, nested)
-# print(year_dict)
-menu = {1 : 'Look up a movie', 2 : "See the last movie watched" }
-print(menu)
+menu = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Movies Watched by Year"}
 
 # Look up a movie in the data frame
 def movie_lookup():
     while True:
         movie_check = input("Enter a movie to see if Jared has seen it. Enter 'B' to go back to the main menu\n")
-        if movie_check.lower() == 'B':
+        if movie_check.lower() == 'b':
             break
-        elif movie_check in movie_csv['Title'].values():
+        elif movie_check in movie_csv['Title'].values:
             print(f"Jared has seen {movie_check}.\n")
         else:
             print(f"Jared hasn't seen {movie_check}\n")    
     
 
- # Sort csv by date and look up last title and last year
+ # Convert Date column to date time abd sort csv by date. Return last entry of title and year.
 def most_recent():
-    sorted_by_date = movie_csv.sort_values('Date')
     recent_movie = sorted_by_date['Title'].iloc[-1]
     recent_year = sorted_by_date['Year'].iloc[-1]
-    print(f"The last movie Jared saw was {recent_movie} in {recent_year}")
+    print(f"The last movie Jared saw was {recent_movie} in {recent_year}\n")
+
+def movie_by_year():
+
+    # initialize empty lists and a dictionary
+    year_count = []
+    movie_count = []
+    by_year_dict = {}
+    
+    # add years from year column to list 1, add value counts from year to list 2.
+    # convert year to string for input retrieval
+    for item in sorted_by_date['Year'].unique():
+        year_count.append(item)
+    for value in sorted_by_date['Year'].value_counts(sort=False):
+        movie_count.append(value)
+    print(sorted_by_date['Year'].value_counts(sort=False))
+   
+   
+    # populate dictionary using 2 lists with year as the key and count as the value
+    by_year_dict = dict(zip(year_count, movie_count))
+
+
+    # have user enter a year, return count if present
+    while True: 
+        year_input = input("Enter a year between 2012 and 2021. Enter 'B' to go back to the main menu\n")
+        if year_input in by_year_dict:
+            print(f"Jared saw {by_year_dict[year_input]} movies in {year_input}\n")
+        elif year_input.lower() == 'b':
+            break
+        elif year_input not in by_year_dict:
+            print("That's not a valid year. Enter a year between 2012 and 2021. Enter 'B' to go back to the main\n")
+        else:
+            print("Enter another year between 2012 and 2021. Enter 'B' to go back to the main menu\n")
+    
 
 
 while True:
-    menu_choice = input("Enter an Option 1 or 2\n")
+    print(f"{menu}\n")
+    menu_choice = input("Please enter option an option 1-3. Enter Q to quit\n")
     if menu_choice == '1':
         movie_lookup()
     elif menu_choice == '2':
         most_recent()
-    if menu_choice.lower() == 'q':
+    elif menu_choice == '3':
+        movie_by_year()
+    elif menu_choice.lower() == 'q':
         break
     else:
-        print("please enter option 1-2 or enter Q to quit")
+        continue
 
         
 
