@@ -1,16 +1,18 @@
 import pandas as pd
 
+
+
 # Import MovieBoardsDigital.csv as a DataFrame. Replace the values in the 'Date' column with a datetime object.
 
-movie_csv = pd.read_csv('MovieBoardsDigital.csv')
-movie_csv['Date'] = pd.to_datetime(movie_csv['Date'])
+movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date'])
+
 
 # Create new DataFrame where values are sorted by the Date column. This will be used later in 'most_recent()' and 'movie_by_year()' functions.
 sorted_by_date = movie_csv.sort_values('Date')
 
 
 # Create dictionary to be used to create a menu for user input.
-menu = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Movies Watched by Year"}
+menu = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Number of movies watched in a year"}
 
 
 # Function to look up a user input in the 'Title' column of the DataFrame. Returns affirmative messaging if input is in 'Title'.
@@ -18,7 +20,7 @@ menu = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Movies Watched by Year"
 def movie_lookup():
    
     while True:
-        movie_check = input("Enter a movie to see if Jared has seen it. Enter 'B' to go back to the main menu\n")
+        movie_check = input("Enter a movie to check if Jared saw it in theaters.\nEnter 'B' to go back to the main menu\n")
         if movie_check.lower() == 'b':
             break
         elif movie_check.lower() in movie_csv['Title'].str.lower().values:
@@ -31,8 +33,12 @@ def movie_lookup():
  # No user input required. Should only return one value.
 def most_recent():
     recent_movie = sorted_by_date['Title'].iloc[-1]
-    recent_year = sorted_by_date['Year'].iloc[-1]
-    print(f"The last movie Jared saw was {recent_movie} in {recent_year}\n")
+    recent_date = sorted_by_date['Date'].iloc[-1]
+
+    #Days between current date and date of last movie seen
+    num_days_ago = pd.Timestamp.today() - recent_date
+    
+    print(f"The last movie Jared saw was {recent_movie}. He saw it {num_days_ago.days} days ago on {recent_date.date()}. \n")
 
 # Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
 def movie_by_year():
@@ -57,13 +63,13 @@ def movie_by_year():
 
     # User inputs a year. If input is a key in 'by_year_dict', return the value. If not a key, then return negative message and restart loop.
     while True: 
-        year_input = input("Enter a year between 2012 and 2021. Enter 'B' to go back to the main menu\n")
+        year_input = input("Enter a year between 2012 and 2021.\nEnter 'B' to go back to the main menu\n")
         if year_input in by_year_dict:
             print(f"Jared saw {by_year_dict[year_input]} movies in {year_input}\n")
         elif year_input.lower() == 'b':
             break
         elif year_input not in by_year_dict:
-            print(f"{year_input} is not a valid year to look up. Enter a year between 2012 and 2021. Enter 'B' to go back to the main\n")
+            print(f"{year_input} can't be found. Enter a year between 2012 and 2021.\nEnter 'B' to go back to the main\n")
       
 # Function for the main menu seen by the user.
 def main():
