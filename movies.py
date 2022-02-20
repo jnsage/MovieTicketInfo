@@ -1,5 +1,7 @@
 import pandas as pd
-
+import numpy as np  
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 
 # Import MovieBoardsDigital.csv as a DataFrame. Replace the values in the 'Date' column with a datetime object.
@@ -12,7 +14,7 @@ sorted_by_date = movie_csv.sort_values('Date')
 
 
 # Create dictionary to be used to create a menu for user input.
-menu = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Number of movies watched in a year"}
+menu = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Number of movies watched in a year", 4 : 'Theater Graph'}
 
 
 # Function to look up a user input in the 'Title' column of the DataFrame. Returns affirmative messaging if input is in 'Title'.
@@ -71,17 +73,34 @@ def movie_by_year():
         elif year_input not in by_year_dict:
             print(f"{year_input} can't be found. Enter a year between 2012 and 2021.\nEnter 'B' to go back to the main\n")
       
+
+def theater_graph():
+    theater_list = []
+    theater_movie_count = []
+    
+    for item in sorted_by_date['Theater'].unique():
+        theater_list.append(item)
+    for value in sorted_by_date['Theater'].value_counts(sort=False):
+       theater_movie_count.append(value)
+
+    plt.bar(theater_list,theater_movie_count)
+    plt.show()
+
+      
 # Function for the main menu seen by the user.
+
 def main():
     while True:
         print(f"{menu}\n")
-        menu_choice = input("Enter an option 1-3. Enter Q to quit\n")
+        menu_choice = input("Enter an option 1-4. Enter Q to quit\n")
         if menu_choice == '1':
             movie_lookup()
         elif menu_choice == '2':
             most_recent()
         elif menu_choice == '3':
             movie_by_year()
+        elif menu_choice == '4':
+            theater_graph()
         elif menu_choice.lower() == 'q':
             break
         else:
