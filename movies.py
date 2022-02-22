@@ -4,12 +4,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
-# Import MovieBoardsDigital.csv as a DataFrame. Replace the values in the 'Date' column with a datetime object.
+# Import MovieBoardsDigital.csv as a DataFrame. Replace the values in the 'Date' and 'Time' columns with a datetime objects.
 
-movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date'])
-
-# Replace Time objects with timedate objects
-movie_csv['Time'] = pd.to_datetime(movie_csv['Time'])
+movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 
 # Create new DataFrame where values are sorted by the Date column. This will be used later in 'most_recent()' and 'movie_by_year()' functions.
 sorted_by_date = movie_csv.sort_values('Date')
@@ -42,7 +39,7 @@ def most_recent():
     #Days between current date and date of last movie seen
     num_days_ago = pd.Timestamp.today() - recent_date
     
-    print(f"The last movie Jared saw was {recent_movie}. He saw it {num_days_ago.days} days ago on {recent_date.date()}. \n")
+    print(f"\nThe last movie Jared saw was {recent_movie}. He saw it {num_days_ago.days} days ago on {recent_date.date()}. \n")
 
 # Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
 def movie_by_year():
@@ -77,7 +74,7 @@ def movie_by_year():
       
 # Produce a chart to show how many movies were show in a 3 hour block
 def by_time_chart():
-   
+    
     # Resample time column into 3 hour blocks starting with 00:00 AM
     resampled_csv = movie_csv.resample('3H', on='Time').count()
     
@@ -88,7 +85,7 @@ def by_time_chart():
     for value in resampled_csv['Time']:
         time_chart_y.append(value)
     
-    # Plot bar chart of # of movies seen by time-window
+    # Plot bar chart of # of movies seen by time
     plt.bar(time_chart_x,time_chart_y)
     plt.show()
 
