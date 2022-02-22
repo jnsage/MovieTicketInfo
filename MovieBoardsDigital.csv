@@ -1,4 +1,4 @@
-Year,Title,Theater,Day,Date,Time,Saw with April
+Year,Title,Theater,Date,Date,Time,Saw with April
 2012,We Bought a Zoo,Baxter Avenue,Sunday,1/8/12,1:15 PM,N
 2012,Extremely Loud and Incredibly Close,Baxter Avenue,Sunday,1/22/12,1:15 PM,N
 2012,Tinker Tailor Soldier Spy,Baxter Avenue,Saturday,1/28/12,4:30 PM,N
@@ -114,10 +114,10 @@ Year,Title,Theater,Day,Date,Time,Saw with April
 2013,The World's End,Baxter Avenue,Friday,9/6/13,1:40 PM,N
 2013,One Direction,Tinseltown,Thursday,9/12/13,2:00 PM,Y
 2013,Prisoners,Mall St. Matthews,Tuesday,9/24/13,11:30 AM,N
-2013,Cloudy With a Chance of Meatballs 2,Baxter Avenue,Tuesday,10/1/13,12:55 AM,N
+2013,Cloudy With a Chance of Meatballs 2,Baxter Avenue,Tuesday,10/1/13,12:55 PM,N
 2013,Don Jon,Baxter Avenue,Monday,10/14/13,1:00 PM,Y
 2013,Escape Plan,Tinseltown,Tuesday,10/22/13,11:30 AM,N
-2013,Captain Phillips,Baxter Avenue,Thursday,10/24/13,7:15 AM,Y
+2013,Captain Phillips,Baxter Avenue,Thursday,10/24/13,7:15 PM,Y
 2013,Ender's Game,Baxter Avenue,Sunday,11/3/13,1:30 PM,Y
 2013,Thor: The Dark World,Mall St. Matthews,Sunday,11/10/13,3:30 PM,Y
 2013,About Time,Baxter Avenue,Saturday,11/23/13,4:00 PM,Y
@@ -253,7 +253,7 @@ Year,Title,Theater,Day,Date,Time,Saw with April
 2015,Star Wars Episode VII: The Force Awakens,XScape Blankenbaker,Tuesday,12/29/15,7:30 PM,Y
 2016,Sisters,Baxter Avenue,Saturday,1/2/16,1:25 PM,Y
 2016,Hateful 8,Baxter Avenue,Tuesday,1/5/16,12:50 PM,N
-2016,The Big Short,Baxter Avenue,Wednesday,1/6/16,7:10 AM,Y
+2016,The Big Short,Baxter Avenue,Wednesday,1/6/16,7:10 PM,Y
 2016,Kung Fu Panda 3,Baxter Avenue,Saturday,1/30/16,1:05 PM,Y
 2016,"Hail, Caesar!",Tinseltown,Monday,2/8/16,11:35 AM,N
 2016,Deadpool,Mall St. Matthews,Saturday,2/13/16,10:50 AM,Y
@@ -263,7 +263,7 @@ Year,Title,Theater,Day,Date,Time,Saw with April
 2016,10 Cloverfield Lane,Baxter Avenue,Monday,3/14/16,1:30 PM,N
 2016,Zootopia,Tinseltown,Monday,3/14/16,5:50 PM,Y
 2016,Boy and the Beast,Baxter Avenue,Tuesday,3/22/16,1:30 PM,N
-2016,Batman vs Superman,Tinseltown,Saturday,4/2/16,1:05 AM,Y
+2016,Batman vs Superman,Tinseltown,Saturday,4/2/16,1:05 PM,Y
 2016,The Jungle Book,Baxter Avenue,Monday,4/18/16,7:05 PM,Y
 2016,Empire of Corpses,Baxter Avenue,Wednesday,4/20/16,7:30 PM,Y
 2016,Huntsman Winter's War,Baxter Avenue,Monday,4/25/16,1:30 PM,Y
@@ -276,7 +276,7 @@ Year,Title,Theater,Day,Date,Time,Saw with April
 2016,Now You See Me 2,Baxter Avenue,Saturday,6/11/16,4:15 PM,Y
 2016,The Nice Guys,Tinseltown,Tuesday,6/14/16,10:50 AM,N
 2016,Dory After Dark,Tinseltown,Thursday,6/16/16,7:00 PM,Y
-2016,Warcraft,Mall St. Matthews,Thursday,6/23/16,1:30 AM,N
+2016,Warcraft,Mall St. Matthews,Thursday,6/23/16,1:30 PM,N
 2016,Independence Day: Resurgence,Baxter Avenue,Tuesday,6/28/16,1:30 PM,N
 2016,Central Intelligence,Mall St. Matthews,Monday,7/4/16,11:05 AM,N
 2016,Mike and Dave Need Wedding Dates,Baxter Avenue,Saturday,7/9/16,1:40 PM,Y
@@ -315,7 +315,7 @@ Year,Title,Theater,Day,Date,Time,Saw with April
 2017,Kong: Skull Island,Baxter Avenue,Tuesday,3/14/17,1:30 PM,N
 2017,Get Out,Mall St. Matthews,Wednesday,3/15/17,7:40 PM,N
 2017,Beauty and the Beast,Baxter Avenue,Thursday,3/16/17,7:30 PM,Y
-2017,Beauty and the Beast,Mall St. Matthews,Sunday,3/26/17,11:00,Y
+2017,Beauty and the Beast,Mall St. Matthews,Sunday,3/26/17,11:00 AM,Y
 2017,Power Rangers,Mall St. Matthews,Monday,4/3/17,10:20 AM,N
 2017,Ghost in the Shell,Baxter Avenue,Monday,4/3/17,1:25 PM,N
 2017,Fate of the Furious,Tinseltown,Sunday,4/23/17,11:30 AM,Y

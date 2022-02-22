@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 
 movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date'])
 
+# Replace Time objects with timedate objects
+movie_csv['Time'] = pd.to_datetime(movie_csv['Time'])
 
 # Create new DataFrame where values are sorted by the Date column. This will be used later in 'most_recent()' and 'movie_by_year()' functions.
 sorted_by_date = movie_csv.sort_values('Date')
@@ -73,21 +75,24 @@ def movie_by_year():
         elif year_input not in by_year_dict:
             print(f"{year_input} can't be found. Enter a year between 2012 and 2021.\nEnter 'B' to go back to the main\n")
       
-
-def theater_graph():
-    theater_list = []
-    theater_movie_count = []
+# Produce a chart to show how many movies were show in a 3 hour block
+def by_time_chart():
+   
+    # Resample time column into 3 hour blocks starting with 00:00 AM
+    resampled_csv = movie_csv.resample('3H', on='Time').count()
     
-    for item in sorted_by_date['Theater'].unique():
-        theater_list.append(item)
-    for value in sorted_by_date['Theater'].value_counts(sort=False):
-       theater_movie_count.append(value)
+    # Make new lists that will become x and y for chart
+    time_chart_x = ['0:00', "3:00", '6:00', '9:00', '12:00', '15:00', '18:00', '21:00' ]
+    time_chart_y = []    
 
-    plt.bar(theater_list,theater_movie_count)
+    for value in resampled_csv['Time']:
+        time_chart_y.append(value)
+    
+    # Plot bar chart of # of movies seen by time-window
+    plt.bar(time_chart_x,time_chart_y)
     plt.show()
 
-      
-# Function for the main menu seen by the user.
+# Function for the main menu seen by qthe user.
 
 def main():
     while True:
@@ -100,7 +105,7 @@ def main():
         elif menu_choice == '3':
             movie_by_year()
         elif menu_choice == '4':
-            theater_graph()
+            by_time_chart()
         elif menu_choice.lower() == 'q':
             break
         else:
