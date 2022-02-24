@@ -13,21 +13,33 @@ sorted_by_date = movie_csv.sort_values('Date')
 
 
 # Create dictionary to be used to create a menu for user input.
-menu = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Number of movies watched in a year", 4 : 'Theater Graph'}
+menu_options = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year", 4 : 'Movies by Start Time'}
+def menu():
+    menu_values = []
+    for item in menu_options.values():
+        menu_values.append(len(item)) 
 
+    max_value_length = max(menu_values) + 10
+    print('='*max_value_length)
+
+    for key in menu_options:
+        x = max_value_length - len(menu_options[key])
+        print(key,"."*(x-3),menu_options[key])    
+
+    print('='*max_value_length)
 
 # Function to look up a user input in the 'Title' column of the DataFrame. Returns affirmative messaging if input is in 'Title'.
 # Returns negative statement if input is not in 'Title'
 def movie_lookup():
    
     while True:
-        movie_check = input("Enter a movie to check if Jared saw it in theaters.\nEnter 'B' to go back to the main menu\n")
+        movie_check = input("\nEnter a movie title to see if Jared saw it in theaters or 'B' to go back to the main menu.\n")
         if movie_check.lower() == 'b':
             break
         elif movie_check.lower() in movie_csv['Title'].str.lower().values:
-            print(f"Jared has seen {movie_check}\n")
+            print(f"\nJared has seen {movie_check}")
         else:
-            print(f"Jared hasn't seen {movie_check}\n")    
+            print(f"\nJared hasn't seen {movie_check}")    
     
 
  # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'sorted_by_date' DataFrame. 
@@ -64,13 +76,13 @@ def movie_by_year():
 
     # User inputs a year. If input is a key in 'by_year_dict', return the value. If not a key, then return negative message and restart loop.
     while True: 
-        year_input = input("Enter a year between 2012 and 2021.\nEnter 'B' to go back to the main menu\n")
+        year_input = input("\nEnter a year 2012-2021 or 'B' to go back to the main menu.\n")
         if year_input in by_year_dict:
-            print(f"Jared saw {by_year_dict[year_input]} movies in {year_input}\n")
+            print(f"\nJared saw {by_year_dict[year_input]} movies in {year_input}")
         elif year_input.lower() == 'b':
             break
         elif year_input not in by_year_dict:
-            print(f"{year_input} can't be found. Enter a year between 2012 and 2021.\nEnter 'B' to go back to the main\n")
+            print(f"\nInformation for {year_input} could not be found.")
       
 # Produce a chart to show how many movies were show in a 3 hour block
 def by_time_chart():
@@ -78,23 +90,31 @@ def by_time_chart():
     # Resample time column into 3 hour blocks starting with 00:00 AM
     resampled_csv = movie_csv.resample('3H', on='Time').count()
     
-    # Make new lists that will become x and y for chart
-    time_chart_x = ['0:00', "3:00", '6:00', '9:00', '12:00', '15:00', '18:00', '21:00' ]
+    # Make new lists that will become x and y values for chart
+
+    time_chart_x = ['12a-2:59a', '3a-5:59a', '6a-8:59a', '9a-11:59a', '12p-2:59p', '3p-5:59p', '6p-8:59p', '9p-11:59p' ]
     time_chart_y = []    
 
     for value in resampled_csv['Time']:
         time_chart_y.append(value)
     
+    print('\nPlease close all charts to continue.')
+    
     # Plot bar chart of # of movies seen by time
-    plt.bar(time_chart_x,time_chart_y)
+    plt.figure(figsize=(10.5,5))
+    plt.bar_label(plt.bar(time_chart_x,time_chart_y, label='# Of Movies', color='#FFA500', edgecolor='000000'))
+    plt.xlabel('Start Time Window')
+    plt.ylabel('# of Movies')
+    plt.title('# of Movies Watched by Start Time')         
     plt.show()
 
+    
 # Function for the main menu seen by qthe user.
 
 def main():
-    while True:
-        print(f"{menu}\n")
-        menu_choice = input("Enter an option 1-4. Enter Q to quit\n")
+    while True:       
+        menu() 
+        menu_choice = input("Enter an option 1-4 or 'Q' to quit.\n")
         if menu_choice == '1':
             movie_lookup()
         elif menu_choice == '2':
@@ -106,7 +126,7 @@ def main():
         elif menu_choice.lower() == 'q':
             break
         else:
-            print(f'{menu_choice} is not a valid option.\n')
+            print(f"{menu_choice} was not a valid option. Enter an option 1-4 or 'Q' to quit. ")
         
 
 main()       
