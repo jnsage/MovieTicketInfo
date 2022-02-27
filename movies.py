@@ -6,12 +6,14 @@ import matplotlib.pyplot as plt
 
 movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 
-# Create new DataFrame where values are sorted by the Date column. This will be used later in 'most_recent()' and 'movie_by_year()' functions.
+# Create new DataFrame where values are sorted by the Date column. Dates and times are 
 sorted_by_date = movie_csv.sort_values(['Date','Time'])
 
 
 # Create dictionary to be used to create a menu for user input.
 menu_options = {1 : 'Movie Lookup', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year", 4 : 'Movies by Start Time'}
+
+# Format and print the menu options.
 def menu():
     menu_values = []
     for item in menu_options.values():
@@ -27,30 +29,35 @@ def menu():
 
     print(header)
 
-# Function to look up a user input in the 'Title' column of the DataFrame. Returns affirmative messaging if input is in 'Title'.
-# Returns negative statement if input is not in 'Title'
+# Function to look up a user input in the 'Title' column of the DataFrame. 
 def movie_lookup():
+    sorted_by_date['Time'] = sorted_by_date['Time'].dt.time
+    sorted_by_date['Date'] = sorted_by_date['Date'].dt.date
    
     while True:
         movie_check = input("\nEnter a movie title to see if Jared saw it in theaters or 'B' to go back to the main menu.\n")
+
         if movie_check.lower() == 'b':
             break
         elif movie_check.lower() in movie_csv['Title'].str.lower().values:
-            print(f"\nJared has seen {movie_check}")
+            # Find index key for input and return values of some other columns with that same index key
+            input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_check.lower())
+            index_values = sorted_by_date.drop(['Year','Title','Saw with April'], axis=1).iloc[input_index]
+            print(f"\nJared saw '{movie_check}' in theaters. Here are the deets:\n{index_values.to_string()}")
         else:
-            print(f"\nJared hasn't seen {movie_check}")    
+            print(f"\nJared didn't see '{movie_check}' in theaters.")    
     
 
  # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'sorted_by_date' DataFrame. 
- # No user input required. Should only return one value.
+
 def most_recent():
     recent_movie = sorted_by_date['Title'].iloc[-1]
-    recent_date = sorted_by_date['Date'].iloc[-1]
+    most_recent_date = sorted_by_date['Date'].iloc[-1]
 
     #Days between current date and date of last movie seen
-    num_days_ago = pd.Timestamp.today() - recent_date
+    num_days_ago = pd.Timestamp.today() - most_recent_date
     
-    print(f"\nThe last movie Jared saw was {recent_movie}. He saw it {num_days_ago.days} days ago on {recent_date.date()}. \n")
+    print(f"\nThe last movie Jared saw was '{recent_movie}'. He saw it {num_days_ago.days} days ago on {most_recent_date.date()}. \n")
 
 # Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
 def movie_by_year():
@@ -95,7 +102,7 @@ def by_time_chart():
     for value in resampled_csv['Time']:
         time_chart_y.append(value)
     
-    print('\nPlease close all charts to continue.')
+    print('\nPlease close all charts to continue.\n')
 
     # Plot bar chart of # of movies seen by time
     plt.figure(figsize=(10.5,5))
@@ -126,7 +133,7 @@ def main():
 
 main()       
 
-print("\nThank you for checking in! Have a nice day")
+print("\nThanks for stopping by!")
 
 
 

@@ -1,27 +1,26 @@
 # Movie Ticket Info Project
 
- Since 2012, I've into a Google Sheets file. This project is about taking a look at a couple aspects of this information for my own curiousity, but can also tell the user a little bit about me (in data form!). This project has 4 menu options, each of which uses data from a CSV snapshot of a truncated Google Sheets file. The CSV is converted into a Pandas dataframe for manipulation and analysis. 
- 
+ I see a lot of movies in theaters. Since 2012, I've logged the information from the ticket stubs of every movie into a Google Sheets file. This project uses data from a CSV snapshot of the movie ticket info from 2012-2021. The CSV is converted into a Pandas dataframe for some manipulation and analysis. 
 
 # Data in MovieBoardsDigital.csv 
 ## Data used in Movie Ticket Info Project:
 - Year - The year in which a movie was seen. 
 - Title - The title of the movie seen.
-- Date - The date (ex. 1/1/2012) on which the movie was seen.
-- Time - The start time of the movie
+- Date - The year/month/day of which the movie was seen.
+- Time - The start time of the movie. 
 
 ## Data not currently used
 - Theater - The name of the theater the movie was seen in.
 - Day of the Week - The day of the week (ex. Monday) the movie was seen on.
-- Saw with April - Was my wife at the movie (Y) or not (N)
+- Saw with April - Was my wife at the movie (Y) or not (N).
 
 # Necessary Packages/Files
 - pandas v1.4.0
-- matplotlib v 3.5.1
+- matplotlib v3.5.1
 - MovieBoardsDigital.csv from [https://github.com/jnsage/movies]
  
 
-# Project Menu Option Descriptions
+#  Menu Options
 ## Option 1 - Movie Lookup
 - Requires user input of a movie title. 
 - If the input is in the dataframe, project will return a postive message.
@@ -45,10 +44,11 @@
 - Returns bar chart of number of movies seen against start times.
 - As data is static, bar chart should look the same each time.
 
-# Requirements
+# Fufilled Requirements
 - Category 1
     - Implements a master loop console application. User can enter commangs to choose options, exit select options, and exit program
     - Option 2 calculates and displays data based on an external factor (the day the option is called)
+    - Option 3 creates lists and a dictionary, and then the dictionary is searched with user input as the key, outputs value back to the user.
 - Category 2
     - This program reads data from an external CSV file.
 - Category 3
