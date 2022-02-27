@@ -1,6 +1,4 @@
 import pandas as pd
-import numpy as np  
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
@@ -9,24 +7,25 @@ import matplotlib.pyplot as plt
 movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 
 # Create new DataFrame where values are sorted by the Date column. This will be used later in 'most_recent()' and 'movie_by_year()' functions.
-sorted_by_date = movie_csv.sort_values('Date')
+sorted_by_date = movie_csv.sort_values(['Date','Time'])
 
 
 # Create dictionary to be used to create a menu for user input.
-menu_options = {1 : 'Movie Check', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year", 4 : 'Movies by Start Time'}
+menu_options = {1 : 'Movie Lookup', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year", 4 : 'Movies by Start Time'}
 def menu():
     menu_values = []
     for item in menu_options.values():
         menu_values.append(len(item)) 
 
-    max_value_length = max(menu_values) + 10
-    print('='*max_value_length)
+    max_value_length = (max(menu_values) + 10)
+    header = '='*max_value_length
+    print(header)
 
     for key in menu_options:
         x = max_value_length - len(menu_options[key])
-        print(key,"."*(x-3),menu_options[key])    
+        print(key,"." * (x-3),menu_options[key])    
 
-    print('='*max_value_length)
+    print(header)
 
 # Function to look up a user input in the 'Title' column of the DataFrame. Returns affirmative messaging if input is in 'Title'.
 # Returns negative statement if input is not in 'Title'
@@ -86,20 +85,18 @@ def movie_by_year():
       
 # Produce a chart to show how many movies were show in a 3 hour block
 def by_time_chart():
-    
+
     # Resample time column into 3 hour blocks starting with 00:00 AM
     resampled_csv = movie_csv.resample('3H', on='Time').count()
     
-    # Make new lists that will become x and y values for chart
-
-    time_chart_x = ['12a-2:59a', '3a-5:59a', '6a-8:59a', '9a-11:59a', '12p-2:59p', '3p-5:59p', '6p-8:59p', '9p-11:59p' ]
+    time_chart_x = ['12a-2:59a', '3a-5:59a', '6a-8:59a', '9a-11:59a', '12p-2:59p', '3p-5:59p', '6p-8:59p', '9p-11:59p']
     time_chart_y = []    
 
     for value in resampled_csv['Time']:
         time_chart_y.append(value)
     
     print('\nPlease close all charts to continue.')
-    
+
     # Plot bar chart of # of movies seen by time
     plt.figure(figsize=(10.5,5))
     plt.bar_label(plt.bar(time_chart_x,time_chart_y, label='# Of Movies', color='#FFA500', edgecolor='000000'))
@@ -108,8 +105,6 @@ def by_time_chart():
     plt.title('# of Movies Watched by Start Time')         
     plt.show()
 
-    
-# Function for the main menu seen by qthe user.
 
 def main():
     while True:       
