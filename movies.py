@@ -20,20 +20,21 @@ def menu():
         menu_values.append(len(item)) 
 
     max_value_length = (max(menu_values) + 10)
-    header = '='*max_value_length
-    print(header)
+    header = '=' * max_value_length
+    print(header) 
 
     for key in menu_options:
-        x = max_value_length - len(menu_options[key])
-        print(key,"." * (x-3),menu_options[key])    
+        x = max_value_length - len(menu_options[key]) - 3
+        print(key,"." * (x),menu_options[key])    
 
     print(header)
+
 
 # Function to look up a user input in the 'Title' column of the DataFrame. 
 def movie_lookup():
-    sorted_by_date['Time'] = sorted_by_date['Time'].dt.time
-    sorted_by_date['Date'] = sorted_by_date['Date'].dt.date
-   
+    sorted_by_date['Show Time'] = sorted_by_date['Time'].dt.time
+    sorted_by_date['Date Seen'] = sorted_by_date['Date'].dt.date
+      
     while True:
         movie_check = input("\nEnter a movie title to see if Jared saw it in theaters or 'B' to go back to the main menu.\n")
 
@@ -42,8 +43,8 @@ def movie_lookup():
         elif movie_check.lower() in movie_csv['Title'].str.lower().values:
             # Find index key for input and return values of some other columns with that same index key
             input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_check.lower())
-            index_values = sorted_by_date.drop(['Year','Title','Saw with April'], axis=1).iloc[input_index]
-            print(f"\nJared saw '{movie_check}' in theaters. Here are the deets:\n{index_values.to_string()}")
+            index_values = sorted_by_date.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
+            print(f"\nJared saw '{movie_check}' in theaters. Here are the deets:\n{index_values.to_string(index=False)}")
         else:
             print(f"\nJared didn't see '{movie_check}' in theaters.")    
     
@@ -57,11 +58,11 @@ def most_recent():
     #Days between current date and date of last movie seen
     num_days_ago = pd.Timestamp.today() - most_recent_date
     
-    print(f"\nThe last movie Jared saw was '{recent_movie}'. He saw it {num_days_ago.days} days ago on {most_recent_date.date()}. \n")
+    print(f"\nJared saw '{recent_movie}' {num_days_ago.days} days ago on {most_recent_date.date()} at {sorted_by_date['Theater'].iloc[-1]}. \n")
 
 # Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
 def movie_by_year():
-
+    
     # Initialize 2 empty lists and a dictionary.
     year_count = []
     movie_count = []
@@ -107,14 +108,15 @@ def by_time_chart():
     # Plot bar chart of # of movies seen by time
     plt.figure(figsize=(10.5,5))
     plt.bar_label(plt.bar(time_chart_x,time_chart_y, label='# Of Movies', color='#FFA500', edgecolor='000000'))
-    plt.xlabel('Start Time Window')
+    plt.xlabel('Show Time Window')
     plt.ylabel('# of Movies')
-    plt.title('# of Movies Watched by Start Time')         
+    plt.title('# of Movies Watched by Show Time')         
     plt.show()
 
 
 def main():
-    while True:       
+    print("\n\n\nLet's all go to the lobby!")
+    while True:     
         menu() 
         menu_choice = input("Enter an option 1-4 or 'Q' to quit.\n")
         if menu_choice == '1':
@@ -128,7 +130,7 @@ def main():
         elif menu_choice.lower() == 'q':
             break
         else:
-            print(f"{menu_choice} was not a valid option. Enter an option 1-4 or 'Q' to quit. ")
+            print(f"\n{menu_choice} was not a valid option. Enter an option 1-4 or 'Q' to quit.\n")
         
 
 main()       
