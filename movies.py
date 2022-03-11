@@ -1,6 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import logging
 
+# Configure Log file
+logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
 # Import MovieBoardsDigital.csv as a DataFrame. Replace the values in the 'Date' and 'Time' columns with a datetime objects.
 
@@ -41,13 +44,15 @@ def movie_lookup():
         if movie_check.lower() == 'b':
             break
         elif movie_check.lower() in movie_csv['Title'].str.lower().values:
+            
             # Find index key for input and return values of some other columns with that same index key
             input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_check.lower())
             index_values = sorted_by_date.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
-            print(f"\nJared saw '{movie_check}' in theaters. Here are the deets:\n{index_values.to_string(index=False)}")
+            print(f"\nJared has ticket info for '{movie_check}'. Here are the deets:\n{index_values.to_string(index=False)}")
+            logging.info(f'Valid   - {movie_check}')
         else:
-            print(f"\nJared didn't see '{movie_check}' in theaters.")    
-    
+            print(f"\nJared doesn't have info for '{movie_check}'.")       
+            logging.info(f'Invalid - {movie_check}')
 
  # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'sorted_by_date' DataFrame. 
 
@@ -86,6 +91,7 @@ def movie_by_year():
         year_input = input("\nEnter a year 2012-2021 or 'B' to go back to the main menu.\n")
         if year_input in by_year_dict:
             print(f"\nJared saw {by_year_dict[year_input]} movies in {year_input}")
+            logging.info(f'{year_input}')
         elif year_input.lower() == 'b':
             break
         elif year_input not in by_year_dict:

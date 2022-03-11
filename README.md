@@ -14,10 +14,17 @@
 - Day of the Week - The day of the week (ex. Monday) the movie was seen on.
 - Saw with April - Was my wife at the movie (Y) or not (N).
 
-# Necessary Packages/Files
+# System Requirements
+- Python v 3.10.1
 - pandas v1.4.0
 - matplotlib v3.5.1
 - MovieBoardsDigital.csv from [https://github.com/jnsage/movies]
+
+# Instructions
+1) Save movies.py and MovieBoardsDigital.csv to the same directory onb your local machine
+2) From the command line, navigate to that directory
+3) Pip install -r requirements.txt. Virtual environment recommended
+3) Run python movie.py from the command line
  
 
 #  Menu Options
