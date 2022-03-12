@@ -6,15 +6,18 @@ import logging
 logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
 # Import MovieBoardsDigital.csv as a DataFrame. Replace the values in the 'Date' and 'Time' columns with a datetime objects.
-
 movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 
 # Create new DataFrame where values are sorted by the Date column. Dates and times are 
 sorted_by_date = movie_csv.sort_values(['Date','Time'])
 
-
 # Create dictionary to be used to create a menu for user input.
-menu_options = {1 : 'Movie Lookup', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year", 4 : 'Movies by Start Time'}
+menu_options = {1 : 'Movie Lookup', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year", 4 : 'Movies by Start Time', 5: 'Suggest a Movie'}
+
+# common variable for menu prompt
+back = "'B' to go back to the main menu.\n"
+
+
 
 # Format and print the menu options.
 def menu():
@@ -33,20 +36,22 @@ def menu():
     print(header)
 
 
+
 # Function to look up a user input in the 'Title' column of the DataFrame. 
 def movie_lookup():
-    sorted_by_date['Show Time'] = sorted_by_date['Time'].dt.time
     sorted_by_date['Date Seen'] = sorted_by_date['Date'].dt.date
-      
+    sorted_by_date['Show Time'] = sorted_by_date['Time'].dt.time
+          
     while True:
-        movie_check = input("\nEnter a movie title to see if Jared saw it in theaters or 'B' to go back to the main menu.\n")
+        movie_check = input(f"\nEnter a movie title to see if Jared saw it in theaters or {back}")
+        movie_lower = movie_check.lower()
 
-        if movie_check.lower() == 'b':
+        if movie_lower == 'b':
             break
-        elif movie_check.lower() in movie_csv['Title'].str.lower().values:
+        elif movie_lower in movie_csv['Title'].str.lower().values:
             
             # Find index key for input and return values of some other columns with that same index key
-            input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_check.lower())
+            input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_lower)
             index_values = sorted_by_date.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
             print(f"\nJared has ticket info for '{movie_check}'. Here are the deets:\n{index_values.to_string(index=False)}")
             logging.info(f'Valid   - {movie_check}')
@@ -54,16 +59,18 @@ def movie_lookup():
             print(f"\nJared doesn't have info for '{movie_check}'.")       
             logging.info(f'Invalid - {movie_check}')
 
- # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'sorted_by_date' DataFrame. 
 
+
+ # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'sorted_by_date' DataFrame. 
 def most_recent():
     recent_movie = sorted_by_date['Title'].iloc[-1]
     most_recent_date = sorted_by_date['Date'].iloc[-1]
 
     #Days between current date and date of last movie seen
     num_days_ago = pd.Timestamp.today() - most_recent_date
-    
     print(f"\nJared saw '{recent_movie}' {num_days_ago.days} days ago on {most_recent_date.date()} at {sorted_by_date['Theater'].iloc[-1]}. \n")
+
+
 
 # Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
 def movie_by_year():
@@ -81,14 +88,13 @@ def movie_by_year():
     # Sort=False to make sure values counts are returned in the corresponding order as the unique values from 'Year'
     for value in sorted_by_date['Year'].value_counts(sort=False):
         movie_count.append(value)
-      
-   
+         
     # Populate dictionary using 'year_count' as the keys and 'movie_count' as the values.
     by_year_dict = dict(zip(year_count, movie_count))
 
     # User inputs a year. If input is a key in 'by_year_dict', return the value. If not a key, then return negative message and restart loop.
     while True: 
-        year_input = input("\nEnter a year 2012-2021 or 'B' to go back to the main menu.\n")
+        year_input = input(f"\nEnter a year 2012-2021 or {back}")
         if year_input in by_year_dict:
             print(f"\nJared saw {by_year_dict[year_input]} movies in {year_input}")
             logging.info(f'{year_input}')
@@ -96,6 +102,8 @@ def movie_by_year():
             break
         elif year_input not in by_year_dict:
             print(f"\nInformation for {year_input} could not be found.")
+
+
       
 # Produce a chart to show how many movies were show in a 3 hour block
 def by_time_chart():
@@ -120,11 +128,28 @@ def by_time_chart():
     plt.show()
 
 
+
+# Function that logs user input
+def movie_suggestion():
+    while True:
+        suggestion = input(f"\nEnter a movie suggestion or {back}")
+        suggestion_lower = suggestion.lower()
+        if suggestion_lower == 'b':
+            break
+        elif suggestion_lower in movie_csv['Title'].str.lower().values:
+            print(f"We've already seen '{suggestion}'")
+        else:
+            logging.info(f'{suggestion}')
+            print("Thank's for the suggestion!")
+
+
+
+# Run the main menu
 def main():
     print("\n\n\nLet's all go to the lobby!")
     while True:     
         menu() 
-        menu_choice = input("Enter an option 1-4 or 'Q' to quit.\n")
+        menu_choice = input(f"Enter an option 1-{list(menu_options.keys())[-1]} or 'Q' to quit.\n")
         if menu_choice == '1':
             movie_lookup()
         elif menu_choice == '2':
@@ -133,15 +158,19 @@ def main():
             movie_by_year()
         elif menu_choice == '4':
             by_time_chart()
+        elif menu_choice == '5':
+            movie_suggestion()
         elif menu_choice.lower() == 'q':
+            print("\nThank's for stopping by!\n")
             break
         else:
             print(f"\n{menu_choice} was not a valid option. Enter an option 1-4 or 'Q' to quit.\n")
+            
         
+        
+if __name__ == "__main__":
+    main()      
 
-main()       
-
-print("\nThanks for stopping by!")
 
 
 
