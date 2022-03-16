@@ -149,6 +149,7 @@ def movie_suggestion():
             print("Thank's for the suggestion!")
 
 
+
 def movie_random():
       
     movie_check = random.choice(sorted_by_date['Title'])
