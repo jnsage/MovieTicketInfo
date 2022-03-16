@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import logging
+import random 
 
 # Configure Log file
 logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
@@ -10,9 +11,12 @@ movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 
 # Create new DataFrame where values are sorted by the Date column. Dates and times are 
 sorted_by_date = movie_csv.sort_values(['Date','Time'])
+sorted_by_date['Date Seen'] = sorted_by_date['Date'].dt.date
+sorted_by_date['Show Time'] = sorted_by_date['Time'].dt.time
 
 # Create dictionary to be used to create a menu for user input.
-menu_options = {1 : 'Movie Lookup', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year", 4 : 'Movies by Start Time', 5: 'Suggest a Movie'}
+menu_options = {1 : 'Movie Lookup', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year",
+                4 : 'Movies by Start Time', 5 : 'Suggest a Movie', 6 : 'Random Ticket'}
 
 # common variable for menu prompt
 back = "'B' to go back to the main menu.\n"
@@ -34,29 +38,31 @@ def menu():
         print(key,"." * (x),menu_options[key])    
 
     print(header)
+    
 
+def info_by_title(movie_check):
+    movie_lower = movie_check.lower()
+
+    # Find index key for input and return values of some other columns with that same index key
+    input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_lower)
+    index_values = sorted_by_date.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
+    print(f"\nJared has ticket info for '{movie_check}'.\nHere are the deets:\n\n{index_values.to_string(index=False)}\n")
 
 
 # Function to look up a user input in the 'Title' column of the DataFrame. 
 def movie_lookup():
-    sorted_by_date['Date Seen'] = sorted_by_date['Date'].dt.date
-    sorted_by_date['Show Time'] = sorted_by_date['Time'].dt.time
-          
+    
     while True:
-        movie_check = input(f"\nEnter a movie title to see if Jared saw it in theaters or {back}")
+        movie_check = input(f"\nEnter a movie title to check for ticket info or {back}")
         movie_lower = movie_check.lower()
 
         if movie_lower == 'b':
             break
         elif movie_lower in movie_csv['Title'].str.lower().values:
-            
-            # Find index key for input and return values of some other columns with that same index key
-            input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_lower)
-            index_values = sorted_by_date.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
-            print(f"\nJared has ticket info for '{movie_check}'. Here are the deets:\n{index_values.to_string(index=False)}")
+            info_by_title(movie_check)
             logging.info(f'Valid   - {movie_check}')
         else:
-            print(f"\nJared doesn't have info for '{movie_check}'.")       
+            print(f"\nThere is no ticket info for '{movie_check}'.")       
             logging.info(f'Invalid - {movie_check}')
 
 
@@ -68,7 +74,7 @@ def most_recent():
 
     #Days between current date and date of last movie seen
     num_days_ago = pd.Timestamp.today() - most_recent_date
-    print(f"\nJared saw '{recent_movie}' {num_days_ago.days} days ago on {most_recent_date.date()} at {sorted_by_date['Theater'].iloc[-1]}. \n")
+    print(f"\nThe most recent movie on record was'{recent_movie}'. Seen {num_days_ago.days} days ago on {most_recent_date.date()} at {sorted_by_date['Theater'].iloc[-1]}. \n")
 
 
 
@@ -127,9 +133,9 @@ def by_time_chart():
     plt.title('# of Movies Watched by Show Time')         
     plt.show()
 
+         
 
-
-# Function that logs user input
+# Function that logs user input of suggestion
 def movie_suggestion():
     while True:
         suggestion = input(f"\nEnter a movie suggestion or {back}")
@@ -141,6 +147,12 @@ def movie_suggestion():
         else:
             logging.info(f'{suggestion}')
             print("Thank's for the suggestion!")
+
+
+def movie_random():
+      
+    movie_check = random.choice(sorted_by_date['Title'])
+    info_by_title(movie_check)
 
 
 
@@ -160,8 +172,10 @@ def main():
             by_time_chart()
         elif menu_choice == '5':
             movie_suggestion()
+        elif menu_choice == '6':
+            movie_random()
         elif menu_choice.lower() == 'q':
-            print("\nThank's for stopping by!\n")
+            print("\nSee you real soon!\n")
             break
         else:
             print(f"\n{menu_choice} was not a valid option. Enter an option 1-4 or 'Q' to quit.\n")

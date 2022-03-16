@@ -11,39 +11,44 @@
 - Time - The start time of the movie. 
 
 # System Requirements
-- Python v 3.10.1
+- Python v3.10.1
     - logging package
     - unittest package
+    - random
 - pandas v1.4.0
 - matplotlib v3.5.1
 - MovieBoardsDigital.csv from [https://github.com/jnsage/movies]
-
+  
+   
 # Instructions
-1) Save movies.py and MovieBoardsDigital.csv to the same directory on your local machine.
+1) Save movies.py and MovieBoardsDigital.csv to the same directory on your local machine. Virtual environment recommended.
 2) From the command line, navigate to that directory.
-3) Pip install -r requirements.txt. Virtual environment recommended.
-3) Run python movie.py from the command line.
+3) Install system requirements: https://pip.pypa.io/en/stable/user_guide/#requirements-files
+4) Run 'python movie.py' from the command line.
  
 
-#  Menu Options
-## Option 1 - Movie Lookup
+#  Menu Choice Descriptions
+## Movie Lookup
 - User inputs a movie title, if the title is present in the dataframe, function returns a postive message. If the input is not present, the function returns a negative message.
 - Searches by exact spelling and punctuation but not casing.
     - 'Spiderman: No Way Home' will be found. 'Spider man No Way Home' will not be found.
     - 'Lincoln' and 'LiNColN' will both be found.
 
-## Option 2 - Most Recent Movie
+## Most Recent Movie
 - Returns the last movie seen by date/start time from the dataframe. Also returns the number of days ago it was seen. As the data in this project is static, function returns the same movie title everytime. 
 
-## Option 3 - Number of Movies Watched in a Year
+## Number of Movies Watched in a Year
 - User inputs a year with format 'xxxx' from the range 2012-2021. If year is present in the dataframe, returns the number of movies seen that year.
 - If the year is not present in the dataframe or is not in correct format, function returns an invalid input message.
 
-## Option 4 - Movies by Start Time
-- Returns bar chart of number of movies seen against start times. 
+## Movies by Start Time
+- Returns a bar chart of number of movies seen against start times. 
 
-## Option 5 - Movie Suggestions
-- User inputs a title suggestion. If the title is not present in the dataframe, function appends the title to an INFO log. If the title is already in the dataframe, the user is alerted and the title is not logged.
+## Movie Suggestions
+- User inputs a title suggestion. If the title is not present in the dataframe, function appends the title to an INFO log. If the title is already present, the user is alerted and the title is not logged.
+
+## Random Ticket
+- Returns the ticket info for a randomly selected movie in the dataframe.
 
 # Fufilled Requirements
 - Category 1
