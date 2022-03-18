@@ -53,7 +53,7 @@ def info_by_title(movie_check):
     # Find index key for input and return values of some other columns with that same index key
     input_index = pd.Index(movie_csv['Title'].str.lower()).get_loc(movie_lower)
     index_values = movie_csv.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
-    print(f"\There is ticket info for '{movie_check}'.\nHere are the deets:\n\n{index_values.to_string(index=False)}\n")
+    print(f"\nThere is ticket info for '{movie_check}'.\nHere are the deets:\n\n{index_values.to_string(index=False)}\n")
 
 
 # Function to look up a user input in the 'Title' column of the DataFrame. 
@@ -113,7 +113,7 @@ def movie_by_year():
         elif ticket_year.lower() == 'b':
             break
         elif ticket_year not in year_seen_dict:
-            print(f"\nInformation for {ticket_year} could not be found.")
+            print(f"\nThere is no ticket information for {ticket_year}.\n")
 
 
       
@@ -144,7 +144,7 @@ def by_time_chart():
 # Function that logs user input of suggestion
 def movie_suggestion():
     while True:
-        suggestion = input(f"\nEnter a movie suggestion or {back_prompt}")
+        suggestion = input(f"\nEnter a movie suggestion or {back_prompt}\n")
         suggestion_lower = suggestion.lower()
         if suggestion_lower == 'b':
             break
@@ -152,7 +152,7 @@ def movie_suggestion():
             print(f"We've already seen '{suggestion}'")
         else:
             logging.info(f'{suggestion}')
-            print("Thank's for the suggestion!")
+            print("\nThank's for the suggestion!\n")
 
 
 
