@@ -6,23 +6,29 @@ import random
 # Configure Log file
 logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
-# Import MovieBoardsDigital.csv as a DataFrame. Replace the values in the 'Date' and 'Time' columns with a datetime objects.
+# Import MovieBoardsDigital.csv as a DataFrame. Replace any string values in the 'Date' and 'Time' columns with a datetime objects.
 movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 
-# Create new DataFrame where values are sorted by the Date column. Dates and times are 
-sorted_by_date = movie_csv.sort_values(['Date','Time'])
-sorted_by_date['Date Seen'] = sorted_by_date['Date'].dt.date
-sorted_by_date['Show Time'] = sorted_by_date['Time'].dt.time
+# Sort dataframe by date then time. Add new columns that aren't datetime.  
+movie_csv = movie_csv.sort_values(['Date','Time'])
+movie_csv['Date Seen'] = movie_csv['Date'].dt.date
+movie_csv['Show Time'] = movie_csv['Time'].dt.time
 
 # Create dictionary to be used to create a menu for user input.
-menu_options = {1 : 'Movie Lookup', 2 : "Most Recent Movie", 3 : "Number of Movies Watched in a Year",
-                4 : 'Movies by Start Time', 5 : 'Suggest a Movie', 6 : 'Random Ticket'}
+menu_options = {1 : 'Movie Lookup',
+                2 : "Most Recent Movie",
+                3 : "Number of Movies Watched in a Year",
+                4 : 'Movies by Start Time',
+                5 : 'Suggest a Movie',
+                6 : 'Random Ticket'}
 
-# common variable for menu prompt
-back = "'B' to go back to the main menu.\n"
+
+# common variables for menu prompts
+back_prompt = "'B' to go back to the main menu.\n"
+main_option_prompt = f"Enter an option 1-{list(menu_options.keys())[-1]} or 'Q' to quit.\n"
 
 
-
+   
 # Format and print the menu options.
 def menu():
     menu_values = []
@@ -41,19 +47,19 @@ def menu():
     
 
 def info_by_title(movie_check):
+    
     movie_lower = movie_check.lower()
 
     # Find index key for input and return values of some other columns with that same index key
-    input_index = pd.Index(sorted_by_date['Title'].str.lower()).get_loc(movie_lower)
-    index_values = sorted_by_date.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
-    print(f"\nJared has ticket info for '{movie_check}'.\nHere are the deets:\n\n{index_values.to_string(index=False)}\n")
+    input_index = pd.Index(movie_csv['Title'].str.lower()).get_loc(movie_lower)
+    index_values = movie_csv.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
+    print(f"\There is ticket info for '{movie_check}'.\nHere are the deets:\n\n{index_values.to_string(index=False)}\n")
 
 
 # Function to look up a user input in the 'Title' column of the DataFrame. 
-def movie_lookup():
-    
+def movie_lookup():    
     while True:
-        movie_check = input(f"\nEnter a movie title to check for ticket info or {back}")
+        movie_check = input(f"\nEnter a movie title to check for ticket info or {back_prompt}")
         movie_lower = movie_check.lower()
 
         if movie_lower == 'b':
@@ -67,47 +73,47 @@ def movie_lookup():
 
 
 
- # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'sorted_by_date' DataFrame. 
+ # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'movie_csv' DataFrame. 
 def most_recent():
-    recent_movie = sorted_by_date['Title'].iloc[-1]
-    most_recent_date = sorted_by_date['Date'].iloc[-1]
+    recent_movie = movie_csv['Title'].iloc[-1]
+    most_recent_date = movie_csv['Date'].iloc[-1]
 
     #Days between current date and date of last movie seen
     num_days_ago = pd.Timestamp.today() - most_recent_date
-    print(f"\nThe most recent movie on record was'{recent_movie}'. Seen {num_days_ago.days} days ago on {most_recent_date.date()} at {sorted_by_date['Theater'].iloc[-1]}. \n")
+    print(f"\nThe most recent movie ticket was'{recent_movie}'. Seen {num_days_ago.days} days ago on {most_recent_date.date()}.\n")
 
 
 
 # Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
 def movie_by_year():
-    
+
     # Initialize 2 empty lists and a dictionary.
-    year_count = []
+    year_seen = []
     movie_count = []
-    by_year_dict = {}
+    year_seen_dict = {}
     
-    # Add unique values from 'Year' column to 'year_count' list. Add value counts from 'Year' to 'movie_count' list.
+    # Add unique values from 'Year' column to 'year_seen' list. Add value counts from 'Year' to 'movie_count' list.
     # Convert unique values from 'Year' to string. 
-    for item in sorted_by_date['Year'].unique():
-        year_count.append(str(item))
+    for item in movie_csv['Year'].unique():
+        year_seen.append(str(item))
 
     # Sort=False to make sure values counts are returned in the corresponding order as the unique values from 'Year'
-    for value in sorted_by_date['Year'].value_counts(sort=False):
+    for value in movie_csv['Year'].value_counts(sort=False):
         movie_count.append(value)
          
-    # Populate dictionary using 'year_count' as the keys and 'movie_count' as the values.
-    by_year_dict = dict(zip(year_count, movie_count))
+    # Populate dictionary using 'year_seen' as the keys and 'movie_count' as the values.
+    year_seen_dict = dict(zip(year_seen, movie_count))
 
-    # User inputs a year. If input is a key in 'by_year_dict', return the value. If not a key, then return negative message and restart loop.
+    # User inputs a year. If input is a key in 'year_seen_dict', return the value. If not a key, then return negative message and restart loop.
     while True: 
-        year_input = input(f"\nEnter a year 2012-2021 or {back}")
-        if year_input in by_year_dict:
-            print(f"\nJared saw {by_year_dict[year_input]} movies in {year_input}")
-            logging.info(f'{year_input}')
-        elif year_input.lower() == 'b':
+        ticket_year = input(f"\nEnter a year 2012-2021 or {back_prompt}")
+        if ticket_year in year_seen_dict:
+            print(f"\nJared saw {year_seen_dict[ticket_year]} movies in {ticket_year}.\n")
+            logging.info(f'{ticket_year}')
+        elif ticket_year.lower() == 'b':
             break
-        elif year_input not in by_year_dict:
-            print(f"\nInformation for {year_input} could not be found.")
+        elif ticket_year not in year_seen_dict:
+            print(f"\nInformation for {ticket_year} could not be found.")
 
 
       
@@ -130,7 +136,7 @@ def by_time_chart():
     plt.bar_label(plt.bar(time_chart_x,time_chart_y, label='# Of Movies', color='#FFA500', edgecolor='000000'))
     plt.xlabel('Show Time Window')
     plt.ylabel('# of Movies')
-    plt.title('# of Movies Watched by Show Time')         
+    plt.title('# of Movies Watched by Show Time')      
     plt.show()
 
          
@@ -138,7 +144,7 @@ def by_time_chart():
 # Function that logs user input of suggestion
 def movie_suggestion():
     while True:
-        suggestion = input(f"\nEnter a movie suggestion or {back}")
+        suggestion = input(f"\nEnter a movie suggestion or {back_prompt}")
         suggestion_lower = suggestion.lower()
         if suggestion_lower == 'b':
             break
@@ -150,9 +156,8 @@ def movie_suggestion():
 
 
 
-def movie_random():
-      
-    movie_check = random.choice(sorted_by_date['Title'])
+def movie_random():   
+    movie_check = random.choice(movie_csv['Title'])
     info_by_title(movie_check)
 
 
@@ -162,7 +167,7 @@ def main():
     print("\n\n\nLet's all go to the lobby!")
     while True:     
         menu() 
-        menu_choice = input(f"Enter an option 1-{list(menu_options.keys())[-1]} or 'Q' to quit.\n")
+        menu_choice = input(main_option_prompt)
         if menu_choice == '1':
             movie_lookup()
         elif menu_choice == '2':
@@ -179,7 +184,7 @@ def main():
             print("\nSee you real soon!\n")
             break
         else:
-            print(f"\n{menu_choice} was not a valid option. Enter an option 1-4 or 'Q' to quit.\n")
+            print(f"\n{menu_choice} was not a valid option. {main_option_prompt}")
             
         
         
