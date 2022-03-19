@@ -156,9 +156,18 @@ def movie_suggestion():
 
 
 
-def movie_random():   
+def movie_random():
+    
     movie_check = random.choice(movie_csv['Title'])
     info_by_title(movie_check)
+    
+    while True:
+        movie_check = input(f"Press enter for another ticket or {back_prompt}")  
+        if movie_check == 'b':
+            break
+        else:
+            movie_check = random.choice(movie_csv['Title'])
+            info_by_title(movie_check)
 
 
 

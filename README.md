@@ -12,9 +12,6 @@
 
 # System Requirements
 - Python v3.10.1
-    - logging package
-    - unittest package
-    - random
 - pandas v1.4.0
 - matplotlib v3.5.1
 - MovieBoardsDigital.csv from [https://github.com/jnsage/movies]
