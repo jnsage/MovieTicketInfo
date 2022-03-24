@@ -17,11 +17,22 @@
 - Active internet connection
   
    
-# Instructions
-1) From the command line, git clone git@github.com:jnsage/MovieTicketInfo.git 
-2) Create and activate a virtual environment. 
-3) Install system requirements: https://pip.pypa.io/en/stable/user_guide/#requirements-files
-4) Run 'python movie.py' from the command line.
+# Instructions 
+From the command line:
+1) Clone the repo
+```
+git clone git@github.com:jnsage/MovieTicketInfo.git
+```
+2) Navigate to the MovieTicketInfo directory.
+3) Create and activate a virtual environment. 
+4) Install system requirements
+```
+pip install -r requirements.txt
+```
+5) Run the program
+```
+python movies.py
+``` 
  
 
 #  Menu Choice Descriptions
