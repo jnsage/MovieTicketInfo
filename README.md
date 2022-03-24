@@ -18,9 +18,8 @@
   
    
 # Instructions
-1) Save movies.py to a directory on your local machine.
-2) From the command line, navigate to that directory.
-2) Create and activate a virtual environment in the directory.
+1) From the command line, git clone git@github.com:jnsage/MovieTicketInfo.git 
+2) Create and activate a virtual environment. 
 3) Install system requirements: https://pip.pypa.io/en/stable/user_guide/#requirements-files
 4) Run 'python movie.py' from the command line.
  
@@ -33,7 +32,7 @@
     - 'Lincoln' and 'LiNColN' will both be found.
 
 ## Most Recent Movie
-- Returns the last movie seen by date/start time from the dataframe. Also returns the number of days ago it was seen. As the data in this project is static, function returns the same movie title everytime. 
+- Returns the last movie seen by date/start time along with how many days ago the movie was seen.
 
 ## Number of Movies Watched in a Year
 - User inputs a year with format 'xxxx' from within range 2012-Current Year. If year exists in the dataframe, returns the number of movies seen that year.

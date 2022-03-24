@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import logging
 import random 
-import urllib
+
 
 # Configure Log file
 logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
@@ -60,6 +60,7 @@ def menu():
     print(header)
     
 
+
 def info_by_title(movie_check):
     
     movie_lower = movie_check.lower()
@@ -68,6 +69,7 @@ def info_by_title(movie_check):
     input_index = pd.Index(movie_csv['Title'].str.lower()).get_loc(movie_lower)
     index_values = movie_csv.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
     print(f"\nThere is ticket info for '{movie_check}'.\nHere are the deets:\n\n{index_values.to_string(index=False)}\n")
+
 
 
 # Function to look up a user input in the 'Title' column of the DataFrame. 
@@ -95,6 +97,7 @@ def most_recent():
     #Days between current date and date of last movie seen
     num_days_ago = pd.Timestamp.today() - most_recent_date
     print(f"\nThe most recent movie ticket was'{recent_movie}'. Seen {num_days_ago.days} days ago on {most_recent_date.date()}.\n")
+
 
 
 # Function that returns message saying # of movies seen in a given year. Used in movie_by_year function
@@ -149,7 +152,10 @@ def movie_by_year():
         else:
             print(f"\n'{ticket_year}' is not a valid year.\n")
             log_year
+    
       
+
+
 # Produce a chart to show how many movies were show in a 3 hour block
 def by_time_chart():
 

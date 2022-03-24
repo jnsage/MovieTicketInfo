@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from movies import movie_csv
+from movies import movie_csv, movies_by_year_lookup
 
 
 # Test concept used for first function in movies.py
@@ -32,8 +32,6 @@ class TestMovieLookup(unittest.TestCase):
     #test if known not-present movie entered in mixed case is not in the dataframe
     def test_mixed_title_not_in(self):
         self.assertNotIn(self.mixed_tile_not_in,self.movie_csv_lower,msg=self.found)        
-
-
 
 if __name__ == '__main__':
     unittest.main()
