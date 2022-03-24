@@ -2,12 +2,26 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import logging
 import random 
+import urllib
 
 # Configure Log file
 logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
-# Import MovieBoardsDigital.csv as a DataFrame. Replace any string values in the 'Date' and 'Time' columns with a datetime objects.
-movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
+# Configure URL for pd.read_csv
+# Full sheet URL == https://docs.google.com/spreadsheets/d/1zYw_XAiYyBTjJOrxXZyetcQC-grdXO5D4CVt2zRIhBc
+workbook_id = "1zYw_XAiYyBTjJOrxXZyetcQC-grdXO5D4CVt2zRIhBc"
+sheet_name = "MovieStubsShort"
+url = f"https://docs.google.com/spreadsheets/d/{workbook_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+
+
+# Import MovieBoardsDigital.csv as a DataFrame. Replace any string values in the 'Date' and 'Time' columns with a datetime objects
+try:
+    movie_csv = pd.read_csv(url, parse_dates=['Date','Time'])
+except urllib.error.URLError:
+    print("There is no internet connection. Please connect to the internet and try again.")
+
+
+# old version movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 
 # Sort dataframe by date then time. Add new columns that aren't datetime.  
 movie_csv = movie_csv.sort_values(['Date','Time'])
@@ -73,7 +87,7 @@ def movie_lookup():
 
 
 
- # Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'movie_csv' DataFrame. 
+# Function that looks up and returns the last value in 'Title' and 'Year' columns from the 'movie_csv' DataFrame. 
 def most_recent():
     recent_movie = movie_csv['Title'].iloc[-1]
     most_recent_date = movie_csv['Date'].iloc[-1]
@@ -83,6 +97,17 @@ def most_recent():
     print(f"\nThe most recent movie ticket was'{recent_movie}'. Seen {num_days_ago.days} days ago on {most_recent_date.date()}.\n")
 
 
+# Function that returns message saying # of movies seen in a given year. Used in movie_by_year function
+def movies_by_year_lookup(year_seen_dict,ticket_year):
+    num_movies = year_seen_dict[ticket_year]
+    if num_movies > 1:
+        print(f"\nThere is ticket information for {num_movies} movies in {ticket_year}.\n")
+    elif num_movies == 1:
+        print(f"\nThere is ticket information for {num_movies} movie in {ticket_year}.\n")
+    elif num_movies == 0:
+        print(f"\nThere is no ticket information for any movies in {ticket_year}.\n")
+       
+
 
 # Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
 def movie_by_year():
@@ -91,6 +116,7 @@ def movie_by_year():
     year_seen = []
     movie_count = []
     year_seen_dict = {}
+    current_year = str(pd.Timestamp.today().year)
     
     # Add unique values from 'Year' column to 'year_seen' list. Add value counts from 'Year' to 'movie_count' list.
     # Convert unique values from 'Year' to string. 
@@ -106,16 +132,23 @@ def movie_by_year():
 
     # User inputs a year. If input is a key in 'year_seen_dict', return the value. If not a key, then return negative message and restart loop.
     while True: 
-        ticket_year = input(f"\nEnter a year 2012-2021 or {back_prompt}")
-        if ticket_year in year_seen_dict:
-            print(f"\nJared saw {year_seen_dict[ticket_year]} movies in {ticket_year}.\n")
-            logging.info(f'{ticket_year}')
+        ticket_year = input(f"\nEnter a year 2012-{current_year} or {back_prompt}")
+        log_year = logging.info(f'{ticket_year}')
+                              
+        if ticket_year in year_seen_dict and ticket_year != current_year:
+            movies_by_year_lookup(year_seen_dict,ticket_year)
+            log_year           
+        elif ticket_year == current_year:
+            try:
+                movies_by_year_lookup(year_seen_dict,ticket_year)
+            except KeyError:
+                print(f"\nThere is no ticket information for any movies in {ticket_year} yet.\n")   
+                log_year             
         elif ticket_year.lower() == 'b':
             break
-        elif ticket_year not in year_seen_dict:
-            print(f"\nThere is no ticket information for {ticket_year}.\n")
-
-
+        else:
+            print(f"\n'{ticket_year}' is not a valid year.\n")
+            log_year
       
 # Produce a chart to show how many movies were show in a 3 hour block
 def by_time_chart():
@@ -156,8 +189,7 @@ def movie_suggestion():
 
 
 
-def movie_random():
-    
+def movie_random():    
     movie_check = random.choice(movie_csv['Title'])
     info_by_title(movie_check)
     
