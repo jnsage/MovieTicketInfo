@@ -3,6 +3,7 @@
  I see a lot of movies in theaters. Since 2012, I've logged the information from the ticket stubs of every movie into a Google Sheets file. This project reads the data from the Google Sheets URL and converts it into a Pandas dataframe for manipulation and analysis. 
 
 # Data used in Movie Ticket Info Project:
+[MovieBoardsDigital Google Sheet](https://docs.google.com/spreadsheets/d/1zYw_XAiYyBTjJOrxXZyetcQC-grdXO5D4CVt2zRIhBc/edit#gid=647226932)
 - Year - The year in which a movie was seen. 
 - Title - The title of the movie seen.
 - Theater - Name of the theater at which the movie was seen

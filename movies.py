@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import logging
 import random 
-
+import urllib
 
 # Configure Log file
 logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
@@ -14,16 +14,14 @@ sheet_name = "MovieStubsShort"
 url = f"https://docs.google.com/spreadsheets/d/{workbook_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
 
 
-# Import MovieBoardsDigital.csv as a DataFrame. Replace any string values in the 'Date' and 'Time' columns with a datetime objects
+# Import Google Sheet as a DataFrame. Replace any string values in the 'Date' and 'Time' columns with a datetime objects.
+    # old version movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
 try:
     movie_csv = pd.read_csv(url, parse_dates=['Date','Time'])
 except urllib.error.URLError:
     print("There is no internet connection. Please connect to the internet and try again.")
-
-
-# old version movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
-
-# Sort dataframe by date then time. Add new columns that aren't datetime.  
+    
+# Sort dataframe by date then time. Add new columns date and time columns.  
 movie_csv = movie_csv.sort_values(['Date','Time'])
 movie_csv['Date Seen'] = movie_csv['Date'].dt.date
 movie_csv['Show Time'] = movie_csv['Time'].dt.time
@@ -201,7 +199,7 @@ def movie_random():
     
     while True:
         movie_check = input(f"Press enter for another ticket or {back_prompt}")  
-        if movie_check == 'b':
+        if movie_check.lower() == 'b':
             break
         else:
             movie_check = random.choice(movie_csv['Title'])
