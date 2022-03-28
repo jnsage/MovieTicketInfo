@@ -4,7 +4,7 @@ import logging
 import random 
 import urllib
 
-# Configure Log file
+# Configure INFO log file
 logging.basicConfig(filename='InputLog.log', format='%(funcName)s %(asctime)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
 # Configure URL for pd.read_csv
@@ -15,7 +15,7 @@ url = f"https://docs.google.com/spreadsheets/d/{workbook_id}/gviz/tq?tqx=out:csv
 
 
 # Import Google Sheet as a DataFrame. Replace any string values in the 'Date' and 'Time' columns with a datetime objects.
-    # old version movie_csv = pd.read_csv('MovieBoardsDigital.csv', parse_dates=['Date','Time'])
+
 try:
     movie_csv = pd.read_csv(url, parse_dates=['Date','Time'])
 except urllib.error.URLError:
@@ -26,7 +26,7 @@ movie_csv = movie_csv.sort_values(['Date','Time'])
 movie_csv['Date Seen'] = movie_csv['Date'].dt.date
 movie_csv['Show Time'] = movie_csv['Time'].dt.time
 
-# Create dictionary to be used to create a menu for user input.
+# Dictionary for menu options.
 menu_options = {1 : 'Movie Lookup',
                 2 : "Most Recent Movie",
                 3 : "Number of Movies Watched in a Year",
@@ -38,7 +38,6 @@ menu_options = {1 : 'Movie Lookup',
 # common variables for menu prompts
 back_prompt = "'B' to go back to the main menu.\n"
 main_option_prompt = f"Enter an option 1-{list(menu_options.keys())[-1]} or 'Q' to quit.\n"
-
 
    
 # Format and print the menu options.
@@ -58,17 +57,16 @@ def menu():
     print(header)
     
 
-
+ # Find index key for movie_check and return values of  other columns with index key
 def info_by_title(movie_check):
     
     movie_lower = movie_check.lower()
+    
+    movie_index_loc = pd.Index(movie_csv['Title'].str.lower()).get_loc(movie_lower)
+    movie_index_values = movie_csv.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[movie_index_loc]
+    print(f"\nThere is ticket info for '{movie_check}'.\nHere are the deets:\n\n{movie_index_values.to_string(index=False)}\n")
 
-    # Find index key for input and return values of some other columns with that same index key
-    input_index = pd.Index(movie_csv['Title'].str.lower()).get_loc(movie_lower)
-    index_values = movie_csv.drop(['Year', 'Time', 'Date', 'Saw with April'], axis=1).iloc[input_index]
-    print(f"\nThere is ticket info for '{movie_check}'.\nHere are the deets:\n\n{index_values.to_string(index=False)}\n")
-
-
+    
 
 # Function to look up a user input in the 'Title' column of the DataFrame. 
 def movie_lookup():    
@@ -110,7 +108,7 @@ def movies_by_year_lookup(year_seen_dict,ticket_year):
        
 
 
-# Function to look up how many movies Jared has seen in a year. Arguement for the year is input by the user.
+# Function to look up how many movies Jared has seen in a year. Argument for the year is input by the user.
 def movie_by_year():
 
     # Initialize 2 empty lists and a dictionary.
@@ -182,17 +180,18 @@ def by_time_chart():
 def movie_suggestion():
     while True:
         suggestion = input(f"\nEnter a movie suggestion or {back_prompt}\n")
-        suggestion_lower = suggestion.lower()
-        if suggestion_lower == 'b':
+        if suggestion.lower() == 'b':
             break
-        elif suggestion_lower in movie_csv['Title'].str.lower().values:
-            print(f"We've already seen '{suggestion}'")
+        elif suggestion.lower() in movie_csv['Title'].str.lower().values:
+            suggestion_index_loc = pd.Index(movie_csv['Title'].str.lower()).get_loc(suggestion.lower())
+            suggestion_date = movie_csv['Date'].iloc[suggestion_index_loc].date()
+            print(f"'{suggestion}' was already seen on {suggestion_date}.\n")
         else:
             logging.info(f'{suggestion}')
-            print("\nThank's for the suggestion!\n")
+            print("\nThanks for the suggestion!\n")
 
 
-
+# Function that looks up a random movie and displays the details on the screen.
 def movie_random():    
     movie_check = random.choice(movie_csv['Title'])
     info_by_title(movie_check)
@@ -207,7 +206,7 @@ def movie_random():
 
 
 
-# Run the main menu
+# function that prints menu and defines menu option inputs
 def main():
     print("\n\n\nLet's all go to the lobby!")
     while True:     
@@ -232,7 +231,7 @@ def main():
             print(f"\n{menu_choice} was not a valid option. {main_option_prompt}")
             
         
-        
+# Run main function       
 if __name__ == "__main__":
     main()      
 
