@@ -40,7 +40,7 @@ back_prompt = "'B' to go back to the main menu.\n"
 main_option_prompt = f"Enter an option 1-{list(menu_options.keys())[-1]} or 'Q' to quit.\n"
 
    
-# Format and print the menu options.
+# Format and print the menu options
 def menu():
     menu_values = []
     for item in menu_options.values():
@@ -92,7 +92,7 @@ def most_recent():
 
     #Days between current date and date of last movie seen
     num_days_ago = pd.Timestamp.today() - most_recent_date
-    print(f"\nThe most recent movie ticket was'{recent_movie}'. Seen {num_days_ago.days} days ago on {most_recent_date.date()}.\n")
+    print(f"\nThe most recent movie ticket was '{recent_movie}', seen {num_days_ago.days} days ago on {most_recent_date.date()}.\n")
 
 
 
@@ -188,7 +188,7 @@ def movie_suggestion():
             print(f"'{suggestion}' was already seen on {suggestion_date}.\n")
         else:
             logging.info(f'{suggestion}')
-            print("\nThanks for the suggestion!\n")
+            print("\nThanks for the suggestion!")
 
 
 # Function that looks up a random movie and displays the details on the screen.
